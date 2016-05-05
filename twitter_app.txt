@@ -1,0 +1,4 @@
+Consumer Key (API Key)			VXsFVFIxnVQhoHrHrrRFmvqd0
+Consumer Secret (API Secret)	OPOb7CTfTGD4sfjg5CxCkQdDFYlKqQtzftDv4ExCWCMKPd56rw
+Owner							tech_apl_int
+Owner ID						3311873921

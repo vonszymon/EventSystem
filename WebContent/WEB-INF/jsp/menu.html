@@ -1,0 +1,31 @@
+<!-- User -->
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<div style="font: menu; text-align: right; margin-right: 20px;">
+ 	<c:url value="/j_spring_security_logout" var="logoutUrl" />
+	<form action="${logoutUrl}" method="post" id="logoutForm">
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
+	</form>
+	<script>
+		function formSubmit() {
+			document.getElementById("logoutForm").submit();
+		}
+	</script>
+
+	<c:if test="${pageContext.request.userPrincipal.name != null}">
+		<font style="font-size: 10px; margin-right: 10px;">Logged as:</font><b>${pageContext.request.userPrincipal.name}</b>
+		<a href="javascript:formSubmit()" style="color:red; font-size: 10px; margin-left: 10px;">(Logout)</a>
+	</c:if>
+	<c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
+		<a href="${contextPath}/registerEvent" style="color:red; font-size: 10px; margin-left: 10px;">Register New Event</a>
+	</c:if>
+	<c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
+		<a href="${contextPath}/rssfeed" style="color:red; font-size: 10px; margin-left: 10px;">Show RSS Feed</a>
+	</c:if>
+	<c:url value="/deleteUser" var="deleteLink">
+	<c:param name="username" value="${pageContext.request.getRemoteUser()}"/>
+	</c:url>
+	<c:if test="${pageContext.request.isUserInRole('ROLE_USER')}">
+		<a href="${deleteLink}" style="color:red; font-size: 10px; margin-left: 10px;">Unregister</a>
+	</c:if>
+</div>
