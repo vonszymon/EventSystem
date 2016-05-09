@@ -30,7 +30,7 @@
 		class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="org.sqlite.JDBC" />
 		<property name="maxTotal" value="1" />
-		<property name="url" value="jdbc:sqlite:/www/eventsdb.db" />
+		<property name="url" value="jdbc:sqlite:E:/STS Projects/EventSystem/DB/eventsdb.db" />
 		<!-- <property name="url" value="jdbc:sqlite:C:/Users/vonszymon/git/tai-project/TAI-Project/DB/eventsdb.db" /> -->
 		<!-- <property name="url" value="jdbc:sqlite:/home/robert/Desktop/tai-project/TAI-Project/DB/eventsdb.db" /> -->
 	</bean>
