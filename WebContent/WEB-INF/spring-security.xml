@@ -1,22 +1,23 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	http://www.springframework.org/schema/security/spring-security-4.1.xsd">
 
 	<http auto-config="true">
-		<intercept-url pattern="/getList**" access="ROLE_USER, ROLE_ADMIN" />
-		<intercept-url pattern="/registerEvent**" access="ROLE_ADMIN" />
-		<intercept-url pattern="/eventDetails**" access="ROLE_USER, ROLE_ADMIN" />
+		<intercept-url pattern="/getList**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/registerEvent**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/eventDetails**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
 		
 		<form-login 
 		    login-page="/login" 
-		    default-target-url="/getList" 
+		    default-target-url="/getList"
+		    login-processing-url="/j_spring_security_check" 
 			authentication-failure-url="/login?error" 
 			username-parameter="username"
 			password-parameter="password" />
-		<logout logout-success-url="/login?logout"  />
+		<logout logout-success-url="/login?logout" logout-url="/j_spring_security_logout" />
 		<!-- enable csrf protection -->
 		<csrf/>
 	</http>

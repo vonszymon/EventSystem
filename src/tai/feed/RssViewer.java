@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
 
-import tai.domain.FeedContent;
+import com.rometools.rome.feed.rss.Channel;
+import com.rometools.rome.feed.rss.Content;
+import com.rometools.rome.feed.rss.Item;
 
-import com.sun.syndication.feed.rss.Channel;
-import com.sun.syndication.feed.rss.Content;
-import com.sun.syndication.feed.rss.Item;
+import tai.domain.FeedContent;
 
 public class RssViewer extends AbstractRssFeedView {
 
