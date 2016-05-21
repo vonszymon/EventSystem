@@ -29,8 +29,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import tai.dao.CommentaryDao;
-import tai.dao.EventDao;
 import tai.dao.UserDao;
 import tai.domain.Commentary;
 import tai.domain.CommentaryComparator;
@@ -39,16 +37,18 @@ import tai.domain.EventComparator;
 import tai.domain.FeedContent;
 import tai.domain.User;
 import tai.feed.RssViewer;
+import tai.service.CommentaryServiceClient;
+import tai.service.EventServiceClient;
 
 @Controller
 @EnableWebMvc
 public class EventController {
 
 	@Autowired
-	EventDao eventDao;
+	EventServiceClient eventService;
 	
 	@Autowired
-	CommentaryDao commentaryDao;
+	CommentaryServiceClient commentaryService;
 	
 	@Autowired
 	UserDao userDao;
@@ -89,8 +89,8 @@ public class EventController {
 		
 		
 		if(action==UserAction.DELETE_OR_EDIT_COMMENT) {
-			Event e = eventDao.getEvent(eventid);
-			Commentary c = commentaryDao.getCommentary(commentid);
+			Event e = eventService.getEvent(eventid);
+			Commentary c = commentaryService.getCommentary(commentid);
 			if(c.getEventID()==e.getEventID() && c.getAuthor().compareTo(u.getUsername())==0) {
 				return true;
 			}
@@ -101,7 +101,7 @@ public class EventController {
 	@RequestMapping("getList")
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) {
 		
-		List<Event> eventList = eventDao.getEventList();
+		List<Event> eventList = eventService.getEvents();
 		Date currentDate = new Date();
 		for(Event e : eventList){
 			if(currentDate.before(e.getStartDate())) e.setActive(true);
@@ -118,11 +118,11 @@ public class EventController {
 	private ModelAndView getEventPageContent(String id) {
 		Map <String, Object> model = new HashMap<>();
 
-		Event event = eventDao.getEvent(id);
+		Event event = eventService.getEvent(id);
 		Date currentDate = new Date();
 		if(currentDate.before(event.getStartDate())) event.setActive(true);
 		else event.setActive(false);
-		List <Commentary> comments = commentaryDao.getCommentList(id);
+		List <Commentary> comments = commentaryService.getCommentaries(id);
 		Collections.sort(comments, Collections.reverseOrder(new CommentaryComparator()));
 		model.put("event", event);
 		model.put("comments", comments);
@@ -143,7 +143,7 @@ public class EventController {
 
 		commentary.setEventID(Integer.parseInt(id));
 		commentary.setPublishDate(new Date());
-		commentaryDao.insertData(commentary);
+		commentaryService.saveComment(commentary);
 		commentary = null;
 		
 		return getEventPageContent(id);
@@ -152,11 +152,11 @@ public class EventController {
 	@RequestMapping(value="eventDetails/{eventId}/edit/{commentId}", method=RequestMethod.GET)
 	public ModelAndView editComment(@ModelAttribute("commentary") Commentary commentary, @PathVariable("eventId") String id, @PathVariable("commentId") String commentid) {
 		Map <String, Object> model = new HashMap<>();
-		Event event = eventDao.getEvent(id);
+		Event event = eventService.getEvent(id);
 		Date currentDate = new Date();
 		if(currentDate.before(event.getStartDate())) event.setActive(true);
 		else event.setActive(false);
-		List <Commentary> comments = commentaryDao.getCommentList(id);
+		List <Commentary> comments = commentaryService.getCommentaries(id);
 		Collections.sort(comments, Collections.reverseOrder(new CommentaryComparator()));
 		model.put("event", event);
 		model.put("comments", comments);
@@ -170,14 +170,14 @@ public class EventController {
 	@RequestMapping(value="eventDetails/{eventId}/edit/{commentId}", method=RequestMethod.POST)
 	public String editCommentDone(@ModelAttribute("commentary") Commentary commentary, @PathVariable("eventId") String id, @PathVariable("commentId") String commentid) {
 		if(canUserPerformAction(UserAction.DELETE_OR_EDIT_COMMENT, id, commentid))
-			commentaryDao.updateData(commentary, commentid);
+			commentaryService.updateComment(commentid, commentary);
 		return "redirect:/eventDetails/"+id;
 	}
 	
 	@RequestMapping(value="eventDetails/{eventId}/remove/{commentId}", method=RequestMethod.GET)
 	public String removeCommentDone(@ModelAttribute("commentary") Commentary commentary, @PathVariable("eventId") String id, @PathVariable("commentId") String commentid) {
 		if(canUserPerformAction(UserAction.DELETE_OR_EDIT_COMMENT, id, commentid))
-			commentaryDao.deleteData(commentid);
+			commentaryService.deleteComment(commentid);
 		return "redirect:/eventDetails/"+id;
 	}
 	
@@ -185,7 +185,7 @@ public class EventController {
 	public String insertData(@ModelAttribute Event event) {
 
 		if (event != null){
-			eventDao.insertData(event);  
+			eventService.saveEvent(event);  
 		}
 		return "redirect:/getList";  
 	}
@@ -193,11 +193,11 @@ public class EventController {
 	@RequestMapping(value="eventDetails/editEvent/{eventId}", method=RequestMethod.GET)
 	public ModelAndView editEvent(@ModelAttribute("event") Event event, @PathVariable("eventId") String id) {
 		Map <String, Object> model = new HashMap<>();
-		Event e = eventDao.getEvent(id);
+		Event e = eventService.getEvent(id);
 		Date currentDate = new Date();
 		if(currentDate.before(e.getStartDate())) e.setActive(true);
 		else e.setActive(false);
-		List <Commentary> comments = commentaryDao.getCommentList(id);
+		List <Commentary> comments = commentaryService.getCommentaries(id);
 		Collections.sort(comments, Collections.reverseOrder(new CommentaryComparator()));
 		model.put("event", e);
 		model.put("comments", comments);
@@ -212,7 +212,7 @@ public class EventController {
 	@RequestMapping(value="eventDetails/editEvent/{eventId}", method=RequestMethod.POST)
 	public String editEventDone(@ModelAttribute("event") Event event, @PathVariable("eventId") String id) {
 		if(canUserPerformAction(UserAction.EDIT_EVENT, id, "")) {
-			eventDao.updateData(event, id);
+			eventService.updateEvent(id, event);
 		}
 		return "redirect:/eventDetails/"+id;
 	}
@@ -254,7 +254,7 @@ public class EventController {
 	public ModelAndView getFeedInRss() {
 		Date currentDate = new Date();
 		List<FeedContent> items = new ArrayList<FeedContent>();
-		List<Event> eventList = eventDao.getEventList();
+		List<Event> eventList = eventService.getEvents();
 		for(Event e : eventList){
 			if(currentDate.before(e.getStartDate())){
 				FeedContent content  = new FeedContent();

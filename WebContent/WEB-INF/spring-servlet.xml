@@ -25,8 +25,8 @@
 	</bean>
 
 	<!-- declare beans -->
-	<bean id="eventDao" class="tai.dao.EventDaoImpl" />
-	<bean id="commentaryDao" class="tai.dao.CommentaryDaoImpl" />
+	<bean id="eventService" class="tai.service.EventServiceClient" />
+	<bean id="commentaryService" class="tai.service.CommentaryServiceClient" />
 	<bean id="userDao" class="tai.dao.UserDaoImpl" />
 
 	<!-- declare datasource bean -->

@@ -7,8 +7,9 @@ public class Tweet {
 	private String author;
 	private Date date;
 	
+	public Tweet(){}
+	
 	public Tweet(String content, String author, Date date) {
-		super();
 		this.content = content;
 		this.author = author;
 		this.date = date;
