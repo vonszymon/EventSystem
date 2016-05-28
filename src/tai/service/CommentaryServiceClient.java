@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 import tai.domain.Commentary;
@@ -11,7 +12,8 @@ import tai.domain.Event;
 
 public class CommentaryServiceClient {
 	
-	public static final String REST_SERVICE_URI = "http://localhost:8080/eventservices/commentary";
+	@Value("${tai.services.comment.uri}")
+	private String REST_SERVICE_URI;
 	
 	public Commentary getCommentary(String commentId){
 		RestTemplate restTemplate = new RestTemplate();

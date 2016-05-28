@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 import tai.domain.Event;
 
 public class EventServiceClient {
 
-	public static final String REST_SERVICE_URI = "http://localhost:8080/eventservices/event";
+	@Value("${tai.services.event.uri}")
+	private String REST_SERVICE_URI;
 	
 	public Event getEvent(String eventId){
 		RestTemplate restTemplate = new RestTemplate();
