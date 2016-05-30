@@ -1,21 +1,23 @@
-create table Event(
-	event_id integer primary key autoincrement,
+CREATE TABLE Event(
+	event_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	title varchar(50),
 	start_date date,
 	content varchar(1024),
 	hashtag varchar(1024)
 );
 
-create table Commentary(
-	commentary_id integer primary key autoincrement,
-	event_id integer,author varchar(50),
+CREATE TABLE Commentary(
+	commentary_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	event_id INT UNSIGNED,
+	author varchar(50),
 	last_name varchar(50),
 	publish_date date,
 	content varchar(100),
-	foreign key(event_id) references Event(event_id)
+	FOREIGN KEY (event_id)
+		REFERENCES Event(event_id)
 );
 
-create table User(
+CREATE TABLE User(
 	username varchar(50),
 	password varchar(50),
 	enabled tinyint,

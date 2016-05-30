@@ -33,17 +33,14 @@
 
 	<!-- declare datasource bean -->
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="org.sqlite.JDBC" />
-		<property name="maxTotal" value="1" />
-		<!-- <property name="url"
-		     value="jdbc:sqlite:E:/STS Projects/EventSystem/DB/eventsdb.db" /> -->
-		<!-- <property name="url" value="jdbc:sqlite:C:/Users/vonszymon/git/tai-project/TAI-Project/DB/eventsdb.db" 
-			/> -->
-		<!-- <property name="url" value="jdbc:sqlite:/home/robert/Desktop/tai-project/TAI-Project/DB/eventsdb.db" 
-			/> -->
+			destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="maxTotal" value="30" />
+		<property name="maxIdle" value="10" />
 		<property name="url"
-			value="jdbc:sqlite:/home/gaba/studia/mgr/I_sem/sius/EventSystem/DB/eventsdb.db" />
+			value="jdbc:mysql://localhost:3301/events_system"/>
+		<property name="username" value="sius"/>
+		<property name="password" value="sius_es"/>
 
 	</bean>
 
