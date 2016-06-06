@@ -1,0 +1,4 @@
+By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivotal'a oraz folder wtpwebapps ze skompilowanymi apkami
+By zdbudować obraz dla dokera należy wpisać:
+(sudo) docker build -t <nazwa_obrazu_dokera> . 
+Ta jedna komenda powinna zbudować dockera
