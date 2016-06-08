@@ -2,3 +2,5 @@ By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivot
 By zdbudować obraz dla dokera należy wpisać:
 (sudo) docker build -t <nazwa_obrazu_dokera> . 
 Ta jedna komenda powinna zbudować dockera
+nastepnie nalezy uruchomic dockera
+sudo docker run -d -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest 
