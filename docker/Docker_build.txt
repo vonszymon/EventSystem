@@ -1,6 +1,26 @@
-By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivotal'a oraz folder wtpwebapps ze skompilowanymi apkami
+By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivotal'a oraz skompilowane pliki mikroserwisu (format .war)
+np. skompilować przez STSa i w katalogu wtpwebapps odpalić w konsoli -> 
+jar cvf EventSystem.war .   
+
+zamieszczona paczki są dla lokalnej maszyny wirtualnej o ip 192.168.99.100
+
+eventservices jest rozpoznawana na porcie 40402 
+Możliwość zmiany przed kompilacją serwisów w resources/application.properties:
+Paczka EventSystem ma już w sobie wskazania z tego pliku:
+tai.services.event.uri=http://192.168.99.100:40402/eventservices/event
+tai.services.comment.uri=http://192.168.99.100:40402/eventservices/commentary 
+ 
+By działały bazy przed kompilacją należy zmienić localhost na ip maszyny wirtualnej
+
+ 
 By zdbudować obraz dla dokera należy wpisać:
 (sudo) docker build -t <nazwa_obrazu_dokera> . 
 Ta jedna komenda powinna zbudować dockera
-nastepnie nalezy uruchomic dockera
-sudo docker run -d -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest 
+Obecnie niestety serwer tomcata nie działa w tle więc trzeba ręcznie wystartować:
+docker run -t -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest
+i w konsoli dockera: ./tcruntime-ctl.sh my_server start
+nie zamykać przy tym konsoli basha -> dopóki działa kontener jest też aktywny!
+
+by odpalić EventSystem oraz eventservices trzeba dwie konsolki.
+W przyszłości -> docker w tle
+(sudo) docker run -d -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest 
