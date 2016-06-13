@@ -1,4 +1,4 @@
-By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivotal'a oraz skompilowane pliki mikroserwisu (format .war)
+By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivotal'a ( https://drive.google.com/open?id=0B5c935hNCEjLSmU4emNZWTZaWEU ) oraz skompilowane pliki mikroserwisu (format .war)
 np. skompilować przez STSa i w katalogu wtpwebapps odpalić w konsoli -> 
 jar cvf EventSystem.war .   
 
@@ -20,6 +20,13 @@ Obecnie niestety serwer tomcata nie działa w tle więc trzeba ręcznie wystarto
 docker run -t -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest
 i w konsoli dockera: ./tcruntime-ctl.sh my_server start
 nie zamykać przy tym konsoli basha -> dopóki działa kontener jest też aktywny!
+
+Przykładowe komendy dla eventservices -> 
+w katalogu Services mając plik eventservices.war oraz pivotal-tc-server-developer-3.1.3.SR1.tar.gz 
+
+docker build new0 .
+docker run -t -p 40402:8080 new0:latest bash
+./tcruntime-ctl.sh my_server start
 
 by odpalić EventSystem oraz eventservices trzeba dwie konsolki.
 W przyszłości -> docker w tle
