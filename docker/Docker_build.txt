@@ -2,22 +2,27 @@ By móc odpalić dockera należy mieć w tym katalogu spakowaną instancje Pivot
 np. skompilować przez STSa i w katalogu wtpwebapps odpalić w konsoli -> 
 jar cvf EventSystem.war .   
 
-zamieszczona paczki są dla lokalnej maszyny wirtualnej o ip 192.168.99.100
+zamieszczone w projekcie skompilowane paczki są dla lokalnej maszyny wirtualnej o ip 192.168.99.100
+- lepiej załączonych warów nie używać, a skompilować swoje bo nasze adresy będą się różnić
+
+( na windowsie kontenery odpalane są na wirtualce z linuchem i używamy ip tej wirtualki,
+na linuchu bodajże kontenery wstają bezpośrednio na hoście więc podajemy ip swojej maszyny
+- po podmianie tych ip w projektach można już skompilować własne wary tak jak wspomniano wyżej )
 
 eventservices jest rozpoznawana na porcie 40402 
 Możliwość zmiany przed kompilacją serwisów w resources/application.properties:
 Paczka EventSystem ma już w sobie wskazania z tego pliku:
 tai.services.event.uri=http://192.168.99.100:40402/eventservices/event
-tai.services.comment.uri=http://192.168.99.100:40402/eventservices/commentary 
- 
-By działały bazy przed kompilacją należy zmienić localhost na ip maszyny wirtualnej
+tai.services.comment.uri=http://192.168.99.100:40402/eventservices/commentary
 
+( Ip wirtualki bądź swojej maszyny - patrz wyżej - podmieniamy w spomnianym pliku application.properties
+i dodatkowo w data source wskazującym na bazę - jeden data source jest w EventSytem drugi w EventSystemServices )
  
 By zdbudować obraz dla dokera należy wpisać:
 (sudo) docker build -t <nazwa_obrazu_dokera> . 
 Ta jedna komenda powinna zbudować dockera
 Obecnie niestety serwer tomcata nie działa w tle więc trzeba ręcznie wystartować:
-docker run -t -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest
+docker run -t -p <numer_portu>:8080 <nazwa_obrazu_dokera>:latest bash
 i w konsoli dockera: ./tcruntime-ctl.sh my_server start
 nie zamykać przy tym konsoli basha -> dopóki działa kontener jest też aktywny!
 
