@@ -1,5 +1,6 @@
 *target*
 *.class
+*.gz
 
 # eclipse specific git ignore
 bin/**
