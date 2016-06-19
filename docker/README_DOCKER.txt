@@ -24,6 +24,13 @@ Przykładowe odpalenie kontenera dla EventSytemServices (z folderu Services):
 docker build -t eventservices .
 docker run -t -i -p 40402:8080 eventservices:latest bash 
 ./tcruntime-ctl.sh my_server start ( nie zamykamy konsoli basha, dopóki działa kontener jest aktywny )
+/start.sh (odpalenie apache kafka)
+
+Odpalenie Apache Kafka:
+
+docker exec -i -t ID /bin/bash ( odpalamy drugiego basha na kontenrze serwisów, w miejsce ID id kontenera z serwisami )
+cd /opt/kafka_2.11-0.10.0.0
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning ( odpalenie konsumenta, będą przez niego widoczne logowane eventy )
 
 Po odpaleniu EventSystem możemy odnaleźć pod adresem : http://IP:40000/EventSystem
 a serwisy : http://IP:40402/eventservices
