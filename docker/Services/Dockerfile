@@ -22,6 +22,12 @@ ENV KAFKA_HOME /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
 
 ADD start.sh /start.sh
 #kafka - end  
+
+#kafka manager - start
+ADD kafka-manager-1.3.0.8.zip /tmp/
+RUN unzip /tmp/kafka-manager-1.3.0.8.zip -d /app/
+
+#kafka manager - end
   
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
@@ -34,7 +40,7 @@ RUN \
   ./tcruntime-instance.sh create my_server
 
 ADD eventservices.war /app/pivotal-tc-server-developer-3.1.3.SR1/my_server/webapps
-EXPOSE 8080 2181 9092
+EXPOSE 8080 2181 9092 9000
 # run kafka, pivotal
 #CMD ["/bin/bash", "/start.sh"]
 

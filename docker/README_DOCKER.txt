@@ -1,4 +1,5 @@
-﻿Kontener dla EventSystem budujemy z katalogu System, dla EventSystemServices z katalogu Services.
+﻿=== Uruchomienie dockera i serwisow ===
+Kontener dla EventSystem budujemy z katalogu System, dla EventSystemServices z katalogu Services.
 By móc odpalić dockera należy mieć w tych katalogach spakowaną instancje Pivotal'a - do pobrania z( https://drive.google.com/open?id=0B5c935hNCEjLSmU4emNZWTZaWEU ) 
 
 W katalogu System powinien ponadto znaleźć się skompilowany EventSystem.war, a w katalogu Services eventservices.war.
@@ -22,11 +23,11 @@ docker run -t -i -p 40000:8080 eventsystem:latest bash
 Przykładowe odpalenie kontenera dla EventSytemServices (z folderu Services):
 
 docker build -t eventservices .
-docker run -t -i -p 40402:8080 eventservices:latest bash 
+docker run -t -i -p 40402:8080 -p 9000:9000 eventservices:latest bash 
 ./tcruntime-ctl.sh my_server start ( nie zamykamy konsoli basha, dopóki działa kontener jest aktywny )
 /start.sh (odpalenie apache kafka)
 
-Odpalenie Apache Kafka:
+===Odpalenie Apache Kafka (uruchomienie tez jest w start.sh):===
 
 docker exec -i -t ID /bin/bash ( odpalamy drugiego basha na kontenrze serwisów, w miejsce ID id kontenera z serwisami )
 cd /opt/kafka_2.11-0.10.0.0
@@ -34,6 +35,19 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beg
 
 Po odpaleniu EventSystem możemy odnaleźć pod adresem : http://IP:40000/EventSystem
 a serwisy : http://IP:40402/eventservices
+
+===Odpalenie Kafka Manager (uruchomienie tez jest w start.sh):===
+Uwaga: musi byc wczesniej uruchomiony wczesniej apache kafka
+
+docker exec -i -t ID /bin/bash ( odpalamy drugiego basha na kontenrze serwisów, w miejsce ID id kontenera z serwisami )
+cd /app/kafka-manager-1.3.0.8
+bin/kafka-manager &
+
+Konfiguracja Kafka Manager:
+- Na host'cie uruchamiany w przegladarce localhost:9000
+- wybieramy z menu Cluster->Add Cluster
+- Cluster Name: myCluster, Cluster Zookeeper Hosts: localhost.
+- Pozostale zostawiamy bez zmian i dajemy Save. Cluster jest skonfigurowany.
 
 *******************************************************************************************
 Wymagany adres IP - na windowsie kontenery odpalane są na wirtualce z linuchem i używamy ip tej wirtualki (docker-machine ls),
