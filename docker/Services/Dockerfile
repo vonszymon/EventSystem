@@ -20,7 +20,8 @@ RUN wget -q http://www-eu.apache.org/dist/kafka/0.10.0.0/kafka_2.11-"$KAFKA_VERS
 
 ENV KAFKA_HOME /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
 
-ADD start.sh /start.sh
+ADD start_kafka.sh /start_kafka.sh
+ADD run_scripts.sh /run_scripts.sh
 #kafka - end  
 
 #kafka manager - start
@@ -40,7 +41,8 @@ RUN \
   ./tcruntime-instance.sh create my_server
 
 ADD eventservices.war /app/pivotal-tc-server-developer-3.1.3.SR1/my_server/webapps
+
 EXPOSE 8080 2181 9092 9000
-# run kafka, pivotal
-#CMD ["/bin/bash", "/start.sh"]
+
+CMD bash -C '/run_scripts.sh';'bash'
 

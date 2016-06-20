@@ -7,9 +7,10 @@ RUN \
   apt-get install -y openjdk-8-jre && \
   rm -rf /var/lib/apt/lists/*
 
-  
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
+ADD run_scripts.sh /run_scripts.sh
 
 ADD pivotal-tc-server-developer-3.1.3.SR1.tar.gz /app
 
@@ -21,8 +22,6 @@ RUN \
 ADD EventSystem.war /app/pivotal-tc-server-developer-3.1.3.SR1/my_server/webapps
 EXPOSE 8080 2181 9092
 
-# Define default command.
-# run pivotal
-#CMD ["/bin/bash", "/start.sh"]
+CMD bash -C '/run_scripts.sh';'bash'
 
 
