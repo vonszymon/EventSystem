@@ -16,6 +16,9 @@ Konfiguracja Kafka Manager:
 - Cluster Name: myCluster, Cluster Zookeeper Hosts: localhost.
 - Pozostale zostawiamy bez zmian i dajemy Save. Cluster jest skonfigurowany.
 
+Na kontenerze eventservices uruchamia się na końcu klient kafki. Aby sprawdzić przychodzące wiadomości trzeba podłączyć się do kontenera:
+docker attach <container id>
+
 ********************RĘCZNY BUILD***************************
 
 === Konfiguracja ===

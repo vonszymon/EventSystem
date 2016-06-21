@@ -10,3 +10,5 @@ $kafkaDir/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-
 sleep 1s
 
 /app/kafka-manager-1.3.0.8/bin/kafka-manager &
+
+$kafkaDir/bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning
