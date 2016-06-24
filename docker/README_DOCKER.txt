@@ -36,9 +36,12 @@ Uwaga! Na samym początku skryptu restartowane są wirtualki. Restart stara się
 U mnie nie było żadnych problemów, ale jeśli wstałyby z innymi IP apka może nie działać ( przy tworzeniu wirtualek, jako argument leci IP wirtualki keystora,
 dlatego jeśli się zmieni to lipa; pewnie można to ustawić ponownie przy restarcie ale nie ogarniałem tego ).
 
+EventSystem : http://IP_WIRTUALKI_mhs-demo0:9000:40000/EventSystem (docker-machine ls)
+EventSystemServices : http://IP_WIRTUALKI_mhs-demo0:9000:40402/eventservices
+
 Konfiguracja Kafka Manager:
 
-- Na host'cie uruchamiany w przegladarce IP_WIRTUALKI_mhs-demo0:9000 (docker-machine ls)
+- Na host'cie uruchamiany w przegladarce IP_WIRTUALKI_mhs-demo0:9000
 - wybieramy z menu Cluster->Add Cluster
 - Cluster Name: myCluster, Cluster Zookeeper Hosts: localhost.
 - Pozostale zostawiamy bez zmian i dajemy Save. Cluster jest skonfigurowany.
