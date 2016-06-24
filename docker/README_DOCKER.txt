@@ -1,12 +1,16 @@
-﻿By móc odpalić dockera należy mieć w katalogach System i Services spakowaną instancje Pivotal'a - do pobrania z( https://drive.google.com/open?id=0B5c935hNCEjLSmU4emNZWTZaWEU ) 
+﻿By móc odpalić dockera należy mieć w katalogach System i Services spakowaną instancje Pivotal'a - do pobrania z( https://drive.google.com/open?id=0B5c935hNCEjLSmU4emNZWTZaWEU )
+oraz spakowane aplikacje - umieszczone w projekcie; można też zbudować własnoręcznie:
 
-********************AUTOMATYCZNY BUILD (na Linuksie)***************************
+jar cvf EventSystem.war . (odpalić wewnątrz wtpwebapps/EventSystem)
+jar cvf eventservices.war . (odpalić wewnątrz wtpwebapps/EventSystemServices)   
 
-./start_env.sh
+******************** Odpalenie kontenerów na localhoście ***************************
+
+sudo ./start_env_localhost.sh
 
 To tyle. Startuje to automatycznie wszystkie dockery, deploy aplikacji i kafke.
 
-EventSystem : http://localhost:40000/EventSystem ( localhost dla linuksa, na windowsie ip wirtualki )
+EventSystem : http://localhost:40000/EventSystem
 EventSystemServices : http://localhost:40402/eventservices
 
 Konfiguracja Kafka Manager:
@@ -16,38 +20,33 @@ Konfiguracja Kafka Manager:
 - Cluster Name: myCluster, Cluster Zookeeper Hosts: localhost.
 - Pozostale zostawiamy bez zmian i dajemy Save. Cluster jest skonfigurowany.
 
-Na kontenerze eventservices uruchamia się na końcu klient kafki. Aby sprawdzić przychodzące wiadomości trzeba podłączyć się do kontenera:
-docker attach <container id>
+******************** Odpalenie kontenerów na klastrze Docker Swarm ***************************
 
-********************RĘCZNY BUILD***************************
+Wymagana instalacja docker-machine oraz virtualboxa ( nie daje głowy, bo już miałem virtualboxa ale prawdopodobnie trzeba ręcznie zainstalować ).
 
-=== Konfiguracja ===
-Kontener dla EventSystem budujemy z katalogu System, dla EventSystemServices z katalogu Services.
-By móc odpalić dockera należy mieć w tych katalogach spakowaną instancje Pivotal'a - do pobrania z( https://drive.google.com/open?id=0B5c935hNCEjLSmU4emNZWTZaWEU ) 
+sudo ./setup_swarm_env.sh  ( odpalamy tylko raz na swoim kompie, tworzy wirtualki na których będą odpalane kontenery )
 
-W katalogu System powinien ponadto znaleźć się skompilowany EventSystem.war, a w katalogu Services eventservices.war (aktualnie wrzucone są tam aktualne wersje apek, więc można z nich skorzystać)
-np. odpalić/skompilować projekty przez STSa i w katalogu wtpwebapps (jest on w katalogu serwera pivotal z którego korzysta STS) odpalić w konsoli -> 
-jar cvf EventSystem.war . (odpalić wewnątrz wtpwebapps/EventSystem)
-jar cvf eventservices.war . (odpalić wewnątrz wtpwebapps/EventSystemServices)  
+Zwracamy uwage przy wywołaniu tego skryptu czy nie pluje się, że mu się nasz virtualbox nie podoba. U mnie się pluł, musiałem zrobić jego update.
 
-﻿=== Odpalenie kontenerów ===
+sudo ./start_env_swarm.sh  ( właściwy skrypt do odpalania kontenerów - przy pierwszym odpaleniu może trochę to trwać, ze względu na zasysanie ubuntu na wirtualki )
 
-Odpalenie baz:
+W skrypcie na początku usuwane są aktualne kontenery na podstawie ich nazwy. Może ich nie być wtedy rzuca errorami że ich nie ma. Nie przejmujemy się.
 
-./deploy.sh (z folderu Databases)
+Uwaga! Na samym początku skryptu restartowane są wirtualki. Restart stara się uruchomić je z takimi samymi IP jak wcześniej.
+U mnie nie było żadnych problemów, ale jeśli wstałyby z innymi IP apka może nie działać ( przy tworzeniu wirtualek, jako argument leci IP wirtualki keystora,
+dlatego jeśli się zmieni to lipa; pewnie można to ustawić ponownie przy restarcie ale nie ogarniałem tego ).
 
-Przykładowe odpalenie kontenera dla EventSytem (z folderu System):
+Konfiguracja Kafka Manager:
 
-Przykładowe odpalenie kontenera dla EventSytemServices (z folderu Services):
+- Na host'cie uruchamiany w przegladarce IP_WIRTUALKI_mhs-demo0:9000 (docker-machine ls)
+- wybieramy z menu Cluster->Add Cluster
+- Cluster Name: myCluster, Cluster Zookeeper Hosts: localhost.
+- Pozostale zostawiamy bez zmian i dajemy Save. Cluster jest skonfigurowany.
 
-docker build -t eventservices .
-docker run -t -i --name eventservices --link eventdb:eventdb -p 40402:8080 -p 9000:9000 eventservices:latest
+Odpalenie klienta Kafki:
 
-docker build -t eventsystem .
-docker run -t -i --name eventsystem --link userdb:userdb --link eventservices:eventservices -p 40000:8080 eventsystem:latest
-
-Po odpaleniu EventSystem możemy odnaleźć pod adresem : http://IP:40000/EventSystem
-a serwisy : http://IP:40402/eventservices
-
+docker exec -i -t ID /bin/bash ( odpalamy drugiego basha na kontenerze serwisów, w miejsce ID id kontenera z serwisami )
+cd /opt/kafka_2.11-0.10.0.0
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning ( odpalenie konsumenta, będą przez niego widoczne logowane eventy )
 
 

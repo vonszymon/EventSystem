@@ -4,10 +4,13 @@ user_database:
   ports:
    - "3301:3306"
   environment:
-    MYSQL_ROOT_PASSWORD: sius_es
-    MYSQL_USER: sius
-    MYSQL_PASSWORD: sius_es
-    MYSQL_DATABASE: events_users
+   - "constraint:node==mhs-demo1"
+  environment:
+   MYSQL_ROOT_PASSWORD: sius_es
+   MYSQL_USER: sius
+   MYSQL_PASSWORD: sius_es
+   MYSQL_DATABASE: events_users
+  net: "my-net"
 
 event_database:
   image: mariadb:10
@@ -15,7 +18,10 @@ event_database:
   ports:
    - "3302:3306"
   environment:
-    MYSQL_ROOT_PASSWORD: sius_es
-    MYSQL_USER: sius
-    MYSQL_PASSWORD: sius_es
-    MYSQL_DATABASE: events_system
+   - "constraint:node==mhs-demo1"
+  environment:
+   MYSQL_ROOT_PASSWORD: sius_es
+   MYSQL_USER: sius
+   MYSQL_PASSWORD: sius_es
+   MYSQL_DATABASE: events_system
+  net: "my-net"

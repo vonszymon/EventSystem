@@ -18,7 +18,8 @@ docker-machine create -d virtualbox \
     --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
     --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
     --engine-opt="cluster-advertise=eth1:2376" \
-  mhs-demo1
+mhs-demo1
+
 
 eval $(docker-machine env --swarm mhs-demo0)
 
