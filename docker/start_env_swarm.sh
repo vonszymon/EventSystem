@@ -1,4 +1,15 @@
+docker-machine restart mh-keystore
+eval "$(docker-machine env mh-keystore)"
+docker run -d \
+    -p "8500:8500" \
+    -h "consul" \
+    progrium/consul -server -bootstrap
+docker-machine restart mhs-demo0
+docker-machine restart mhs-demo1
+
 eval $(docker-machine env --swarm mhs-demo0)
+
+docker network create --driver overlay --subnet=10.0.9.0/24 my-net
 
 docker stop userdb
 docker stop eventdb
